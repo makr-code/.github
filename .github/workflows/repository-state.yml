@@ -1,0 +1,80 @@
+name: Repository state report
+
+on:
+  schedule:
+    - cron: '17 8 * * 1'
+  workflow_dispatch:
+    inputs:
+      repositories:
+        description: Space-separated makr-code repositories to report
+        type: string
+        default: makr-code/.github makr-code/makr-code makr-code/ThemisDB makr-code/GalaxyQuest
+  workflow_call:
+    inputs:
+      repositories:
+        description: Space-separated makr-code repositories to report
+        type: string
+        default: makr-code/.github makr-code/makr-code makr-code/ThemisDB makr-code/GalaxyQuest
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: repository-state-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Combine repository metadata and latest CI states
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORIES: ${{ inputs.repositories || 'makr-code/.github makr-code/makr-code makr-code/ThemisDB makr-code/GalaxyQuest' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          read -r -a repositories <<< "$REPOSITORIES"
+          if (( ${#repositories[@]} == 0 || ${#repositories[@]} > 20 )); then
+            echo 'Specify between 1 and 20 repositories.' >&2
+            exit 1
+          fi
+          for repository in "${repositories[@]}"; do
+            if [[ ! "$repository" =~ ^makr-code/[A-Za-z0-9_.-]+$ ]]; then
+              echo 'Only space-separated makr-code repository names are accepted.' >&2
+              exit 1
+            fi
+          done
+          {
+            printf '# Repository state report\n\n'
+            printf 'Collected at %s. Read-only snapshot; no repositories are modified or merged.\n\n' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            printf '| Repository | Default branch | Archived | Open issues + PRs | Latest workflow run |\n'
+            printf '| --- | --- | --- | --- | --- |\n'
+          } >> "$GITHUB_STEP_SUMMARY"
+          failed=0
+          for repository in "${repositories[@]}"; do
+            if ! metadata="$(gh api "repos/$repository")"; then
+              printf '| %s | Unavailable | — | — | — |\n' "$repository" >> "$GITHUB_STEP_SUMMARY"
+              failed=1
+              continue
+            fi
+            branch="$(jq -r '.default_branch | @uri' <<< "$metadata")"
+            archived="$(jq -r '.archived' <<< "$metadata")"
+            open_items="$(jq -r '.open_issues_count' <<< "$metadata")"
+            if runs="$(gh api "repos/$repository/actions/runs?per_page=1")"; then
+              latest="$(jq -r '
+                if (.workflow_runs | length) == 0 then "No workflow runs"
+                else .workflow_runs[0] |
+                  "[\(.conclusion // .status)](\(.html_url))"
+                end' <<< "$runs")"
+            else
+              latest='Unavailable (access or API error)'
+              failed=1
+            fi
+            printf '| [%s](https://github.com/%s) | %s | %s | %s | %s |\n' \
+              "$repository" "$repository" "$branch" "$archived" "$open_items" "$latest" >> "$GITHUB_STEP_SUMMARY"
+          done
+          printf '\nThe latest run is not the combined health of all workflows or required branch checks. Unavailable data makes this report job fail; inspect the logs for details.\n' >> "$GITHUB_STEP_SUMMARY"
+          exit "$failed"

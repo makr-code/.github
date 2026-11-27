@@ -1,0 +1,57 @@
+name: Documentation review
+
+on:
+  workflow_call:
+    inputs:
+      documents:
+        description: Documents to review (only those present in the calling repository)
+        type: string
+        default: README.md, CTEST.md, BENCHMARKS.md, CHANGELOG.md
+  workflow_dispatch:
+    inputs:
+      documents:
+        description: Documents to review (only those present in this repository)
+        type: string
+        default: README.md, CTEST.md, BENCHMARKS.md, CHANGELOG.md
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: documentation-review-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  request-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Open one documentation review issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          DOCUMENTS: ${{ inputs.documents }}
+          ISSUE_TITLE: Periodic documentation review
+        shell: bash
+        run: |
+          set -euo pipefail
+          existing_url="$(gh issue list --state open --limit 100 \
+            --search "\"${ISSUE_TITLE}\" in:title" \
+            --json title,url \
+            --jq '.[] | select(.title == "Periodic documentation review") | .url' \
+            | head -n 1)"
+          if [[ -n "$existing_url" ]]; then
+            printf 'An open review already exists: %s\n' "$existing_url" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          body="$(printf '%s\n' \
+            'Review the following documents where they exist in this repository:' \
+            '' "$DOCUMENTS" '' \
+            '- [ ] Check accuracy against the current code, tests, releases, and benchmarks.' \
+            '- [ ] Open a pull request for any necessary updates and link it to this issue.' \
+            '- [ ] Have a maintainer review the evidence and approve before merging.' \
+            '' \
+            'Do not invent test results or benchmark numbers. This workflow does not modify files or merge pull requests.')"
+          issue_url="$(gh issue create --title "$ISSUE_TITLE" --body "$body")"
+          printf 'Documentation review requested: %s\n' "$issue_url" >> "$GITHUB_STEP_SUMMARY"

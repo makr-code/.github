@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Community support
+    url: https://github.com/makr-code/.github/issues
+    about: Ask general questions here. This is public; do not share confidential data or vulnerabilities.
