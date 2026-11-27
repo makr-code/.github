@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest an improvement.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing requests first. This request is public: do not include confidential data, credentials, or personal information.
+  - type: input
+    id: affected
+    attributes:
+      label: Affected component
+      description: Identify the repository or component this request concerns.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: Explain the need and who would benefit.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed improvement
+      description: Describe the desired behavior and what a successful outcome would look like.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe existing options or workarounds, if any.

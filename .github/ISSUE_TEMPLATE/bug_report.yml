@@ -1,0 +1,50 @@
+name: Bug report
+description: Report a reproducible problem.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues first. This report is public: do not include confidential data, credentials, personal information, or private logs. Report vulnerabilities through the affected repository's Security policy instead.
+  - type: input
+    id: affected
+    attributes:
+      label: Affected component and version
+      description: Identify the repository or component and version or commit, if known.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the bug and its impact.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Provide minimal steps or a sanitized example. If reproduction is uncertain, explain what you observed.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happens instead? Include only sanitized output.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Share relevant operating system, browser, runtime, or configuration details. State if not applicable.
+    validations:
+      required: true
