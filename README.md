@@ -28,7 +28,7 @@ was found) or chimera (no Actions workflows were found).
 - [Code of conduct](CODE_OF_CONDUCT.md)
 - [Support guidance](SUPPORT.md)
 - [Security reporting policy](SECURITY.md)
-- Bug report and feature request forms, plus a pull request template
+- Bug, feature/enhancement, and documentation-audit issue forms, plus a pull request template
 - GitHub Sponsors configuration in `.github/FUNDING.yml`; [FUNDING.md](FUNDING.md)
   remains the human-readable sponsorship guide
 

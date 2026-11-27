@@ -1,12 +1,22 @@
-## Summary
+## Summary and motivation
 
-Describe the change, why it is needed, and any related issues.
+Describe what changed and why. Link related issues (for example, `Closes #123`).
 
-## Validation
+## Change type
 
-Describe checks performed and their results, or explain why checks were not run. Note any limitations.
+- [ ] Bug fix
+- [ ] Feature or enhancement
+- [ ] Documentation
+- [ ] Refactoring or maintenance
+- [ ] Breaking change
 
-## Security checklist
+## Validation and evidence
 
-- [ ] I have excluded credentials, confidential data, and unnecessary personal information from this change and its discussion.
-- [ ] I have considered security implications and used the affected repository's private reporting guidance for any vulnerabilities, rather than disclosing them here.
+List the tests or checks performed and their results. Include relevant evidence, or explain why validation was not applicable or could not be run.
+
+## Review checklist
+
+- [ ] I reviewed my changes and updated relevant documentation.
+- [ ] I considered compatibility and migration needs; breaking changes are described above.
+- [ ] I considered security implications and included no credentials or confidential data.
+- [ ] Any security vulnerability is reported through the affected repository's private reporting channel, not in this public pull request.

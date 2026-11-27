@@ -1,0 +1,52 @@
+name: Documentation audit finding
+description: Report inaccurate, stale, incomplete, or missing documentation.
+title: "[Docs]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This report is public. Do not include confidential data, credentials, private repository details, or personal information.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the documentation gap, inaccuracy, or broken link.
+    validations:
+      required: true
+  - type: dropdown
+    id: gap-type
+    attributes:
+      label: Finding type
+      options:
+        - Inaccurate
+        - Missing
+        - Stale
+        - Broken link
+        - Incomplete
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: affected-docs
+    attributes:
+      label: Affected documentation
+      description: Link or give repository-relative paths for the affected public documents.
+    validations:
+      required: true
+  - type: textarea
+    id: source-of-truth
+    attributes:
+      label: Source of truth
+      description: Link the relevant implementation, tests, release notes, or canonical documentation that supports this finding.
+  - type: textarea
+    id: current-expected
+    attributes:
+      label: Current and expected state
+      description: Explain what the documentation says now and what should change.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add sanitized evidence or context that would help reproduce or verify the finding.

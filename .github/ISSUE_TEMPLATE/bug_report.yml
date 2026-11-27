@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible problem.
+description: Report a reproducible bug or unexpected behavior.
 title: "[Bug]: "
 body:
   - type: markdown
@@ -10,14 +10,14 @@ body:
     id: affected
     attributes:
       label: Affected component and version
-      description: Identify the repository or component and version or commit, if known.
+      description: Identify the repository, component, and version or commit, if known.
     validations:
       required: true
   - type: textarea
     id: problem
     attributes:
-      label: Problem
-      description: Describe the bug and its impact.
+      label: Description and impact
+      description: Clearly describe the unexpected behavior and its impact.
     validations:
       required: true
   - type: textarea
@@ -31,14 +31,14 @@ body:
     id: expected
     attributes:
       label: Expected behavior
-      description: What should happen?
+      description: What did you expect to happen?
     validations:
       required: true
   - type: textarea
     id: actual
     attributes:
       label: Actual behavior
-      description: What happens instead? Include only sanitized output.
+      description: What happened instead? Include only sanitized output.
     validations:
       required: true
   - type: textarea
@@ -48,3 +48,8 @@ body:
       description: Share relevant operating system, browser, runtime, or configuration details. State if not applicable.
     validations:
       required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add sanitized logs, screenshots, or other relevant details.
